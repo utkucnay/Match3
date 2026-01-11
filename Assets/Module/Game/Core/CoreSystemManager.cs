@@ -1,11 +1,11 @@
 public class CoreSystemManager : SystemManager
 {
-    Level level;
+    Level _level;
 
     private void Awake()
     {
-        level = new Level();
+        _level = new Level();
 
-        RegisterSystem(level);
+        RegisterSystem(_level);
     }
 }
