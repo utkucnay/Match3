@@ -133,12 +133,12 @@ public class Board
 
         while (cellIndexQueue.Count != 0)
         {
-            int cellIndexs = cellIndexQueue.Dequeue(); 
-            Cell cellQueue = _cells[cellIndexs];
+            int cellIndex = cellIndexQueue.Dequeue(); 
+            Cell cellQueue = _cells[cellIndex];
 
-            if (selectedCells.IndexOf(cellIndexs) == -1)
+            if (selectedCells.IndexOf(cellIndex) == -1)
             {
-                selectedCells[count] = cellIndexs;
+                selectedCells[count] = cellIndex;
                 count++;
             }
 
