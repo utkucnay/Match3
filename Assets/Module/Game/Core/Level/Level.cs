@@ -27,7 +27,7 @@ public class Level : ISystem
         logger.Log("Level Instance Destroyed");
     }
 
-    public void Initiliaze()
+    public void Initialize()
     {
         
     }
