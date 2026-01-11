@@ -1,0 +1,25 @@
+{
+    "name": "BoardTests",
+    "rootNamespace": "",
+    "references": [
+        "UnityEditor.TestRunner",
+        "CoreSystem",
+        "Util",
+        "Unity.Collections"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
