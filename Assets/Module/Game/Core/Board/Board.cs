@@ -121,13 +121,13 @@ public class Board
         return boardHistory;
     }
 
-    private int CheckBlastTile(int cellIndex, Span<int> selectedCells, Direction direction)
+    private int CheckBlastTile(int beginCellIndex, Span<int> selectedCells, Direction direction)
     {
-        Cell cell = _cells[cellIndex];
+        Cell cell = _cells[beginCellIndex];
         int count = 0;
 
         Queue<int> cellIndexQueue = new();
-        cellIndexQueue.Enqueue(cellIndex);
+        cellIndexQueue.Enqueue(beginCellIndex);
 
         Item targetItem = _items[cell.itemIndex];
 
