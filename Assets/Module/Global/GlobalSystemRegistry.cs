@@ -6,10 +6,12 @@ public class GlobalSystemRegistry : SystemRegistry
     
     [SerializeField] private int _logLevel;
 
-    LogService logger;
+    private LogService logger;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (Instance == null)
         {
             DontDestroyOnLoad(gameObject);

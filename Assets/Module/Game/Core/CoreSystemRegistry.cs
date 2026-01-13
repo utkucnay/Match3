@@ -2,8 +2,10 @@ public class CoreSystemRegistry : SystemRegistry
 {
     Level _level;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         _level = new Level();
 
         RegisterSystem(_level);
