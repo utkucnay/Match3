@@ -65,6 +65,19 @@ public class LevelData
 
     private int GetIndex(int x, int y)
     {
+        if (x < 0 || x >= Width)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(x),
+                $"x must be between 0 (inclusive) and {Width} (exclusive). Actual value: {x}.");
+        }
+
+        if (y < 0 || y >= Height)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(y),
+                $"y must be between 0 (inclusive) and {Height} (exclusive). Actual value: {y}.");
+        }
         return (y * Width) + x;
     }
 }
