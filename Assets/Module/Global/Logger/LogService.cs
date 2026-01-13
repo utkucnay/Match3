@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class Logger : ISystem
+public class LogService : ISystem
 {
     private readonly int logLevel;
 
-    public Logger(int logLevel)
+    public LogService(int logLevel)
     {
         this.logLevel = logLevel;
     }
@@ -35,3 +35,4 @@ public class Logger : ISystem
         Debug.LogAssertion(log);
     }
 }
+

@@ -1,12 +1,12 @@
 using Unity.Mathematics;
 
-public struct Progress
+public struct ProgressCounter
 {
     public int id;
     public int value;
     public int maxValue;
 
-    public Progress(int id, int maxValue)
+    public ProgressCounter(int id, int maxValue)
     {
         value = 0;
         this.id = id;

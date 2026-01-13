@@ -12,3 +12,32 @@ public enum Direction
     Down_Left = 128,
     Count = 8
 }
+
+public static class DirectionExtensions
+{
+    public static int GetDirectionIndex(this Direction dir)
+    {
+        switch (dir)
+        {
+            case Direction.Up:
+                return 0;
+            case Direction.Down:
+                return 1;
+            case Direction.Right:
+                return 2;
+            case Direction.Left:
+                return 3;
+            case Direction.Up_Right:
+                return 4;
+            case Direction.Up_Left:
+                return 5;
+            case Direction.Down_Right:
+                return 6;
+            case Direction.Down_Left:
+                return 7;
+            default:
+                Debug.LogError("Invalid Direction");
+                return -1;
+        }
+    }
+}

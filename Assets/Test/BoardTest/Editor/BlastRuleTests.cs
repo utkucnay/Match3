@@ -6,12 +6,12 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class BoardBlastTests
+public class BlastRuleTests
 {
     [Test]
     public void OnBoardUpdate_WhenBlastColumnExists_ReturnsBlastedTiles()
     {
-        var data = new BoardData { width = 5, height = 5 };
+        var data = new BoardConfig { width = 5, height = 5 };
         var board = new Board(data);
 
         var cells = BuildCells(data.width, data.height);
@@ -43,7 +43,7 @@ public class BoardBlastTests
     [Test]
     public void OnBoardUpdate_WhenVerticalBlast_SetsVerticalDebugName()
     {
-        var data = new BoardData { width = 5, height = 5 };
+        var data = new BoardConfig { width = 5, height = 5 };
         var board = new Board(data);
 
         var cells = BuildCells(data.width, data.height);
@@ -67,13 +67,13 @@ public class BoardBlastTests
         var history = board.OnBoardUpdate(IndexOf(2, 2, data.width), Direction.Up);
 
         Assert.IsFalse(history.isReturn, "Expected blast to mark move as non-return.");
-        Assert.AreEqual("Vertical Blast Condition", history.blastConditionDebugName.ToString());
+        Assert.AreEqual("Vertical Blast Rule", history.blastConditionDebugName.ToString());
     }
 
     [Test]
     public void OnBoardUpdate_WhenHorizontalBlast_SetsHorizontalDebugName()
     {
-        var data = new BoardData { width = 5, height = 5 };
+        var data = new BoardConfig { width = 5, height = 5 };
         var board = new Board(data);
 
         var cells = BuildCells(data.width, data.height);
@@ -97,13 +97,13 @@ public class BoardBlastTests
         var history = board.OnBoardUpdate(IndexOf(2, 2, data.width), Direction.Right);
 
         Assert.IsFalse(history.isReturn, "Expected blast to mark move as non-return.");
-        Assert.AreEqual("Horizontal Blast Condition", history.blastConditionDebugName.ToString());
+        Assert.AreEqual("Horizontal Blast Rule", history.blastConditionDebugName.ToString());
     }
 
     [Test]
     public void OnBoardUpdate_WhenNoBlast_ReturnsIsReturnTrueAndNoBlastedTiles()
     {
-        var data = new BoardData { width = 3, height = 3 };
+        var data = new BoardConfig { width = 3, height = 3 };
         var board = new Board(data);
 
         var cells = BuildCells(data.width, data.height);
@@ -121,7 +121,7 @@ public class BoardBlastTests
     [Test]
     public void OnBoardUpdate_WhenNoBlast_ReturnsSwappedTiles()
     {
-        var data = new BoardData { width = 2, height = 1 };
+        var data = new BoardConfig { width = 2, height = 1 };
         var board = new Board(data);
 
         var cells = BuildCells(data.width, data.height);
@@ -137,7 +137,7 @@ public class BoardBlastTests
 
         var history = board.OnBoardUpdate(0, Direction.Right);
 
-        var updatedCells = GetPrivateField<Cell[]>(board, "_cells");
+        var updatedCells = GetPrivateField<BoardCell[]>(board, "_cells");
 
         Assert.IsTrue(history.isReturn, "Expected move to be marked as return when no blast occurs.");
         Assert.AreEqual(0, updatedCells[0].itemIndex, "Expected cell 0 to return to item 0 after swap back.");
@@ -149,10 +149,10 @@ public class BoardBlastTests
         return (y * width) + x;
     }
 
-    private static Cell[] BuildCells(int width, int height)
+    private static BoardCell[] BuildCells(int width, int height)
     {
         int size = width * height;
-        var cells = new Cell[size];
+        var cells = new BoardCell[size];
 
         for (int y = 0; y < height; y++)
         {
@@ -160,7 +160,7 @@ public class BoardBlastTests
             {
                 int index = IndexOf(x, y, width);
 
-                cells[index] = new Cell
+                cells[index] = new BoardCell
                 {
                     itemIndex = index,
                     upCellIndex = y + 1 < height ? IndexOf(x, y + 1, width) : -1,
@@ -209,4 +209,5 @@ public class BoardBlastTests
         return (T)field.GetValue(target);
     }
 }
+
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class SystemManager : MonoBehaviour
+public abstract class SystemRegistry : MonoBehaviour
 {
     protected Dictionary<Type, ISystem> _systems;
 
@@ -26,3 +26,4 @@ public abstract class SystemManager : MonoBehaviour
         return null;
     }
 }
+

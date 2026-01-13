@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Util.ScreenSpace 
 {
-    public class ScreenSpaceRef : MonoBehaviour
+    public class ScreenSpaceAnchor : MonoBehaviour
     {
         
 
@@ -17,3 +17,4 @@ namespace Util.ScreenSpace
         }
     }
 }
+

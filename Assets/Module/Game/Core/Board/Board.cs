@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 
-public struct BoardData
+public struct BoardConfig
 {
     public int width;
     public int height;
@@ -11,74 +11,88 @@ public struct BoardData
 
 public class Board 
 {
-    private Cell[] _cells;
+    private BoardCell[] _cells;
     private Item[] _items;
-    private BlastCondition[] _blastConditions;
+    private BlastRule[] _blastConditions;
 
-    private readonly BoardData boardData;
+    private readonly BoardConfig boardData;
 
-    public Board(BoardData boardData)
+    public  Board(BoardConfig boardData)
     {
         this.boardData = boardData;
         int size = boardData.width * boardData.height;
-        _cells = new Cell[size];
+        _cells = new BoardCell[size];
         _items = new Item[size * 2];
 
-        var blastConditions = new List<BlastCondition>();
+        var blastConditions = new List<BlastRule>();
 
-        BlastCondition special1Condition = new BlastCondition()
+        BlastRule special1Condition = new BlastRule()
         {
-            name = "Special 1 Blast Condition",
+            name = "Special 1 Blast Rule",
             order = 9,
-            direction = Direction.Up | Direction.Down,
-            maxPossibleSelectTile = boardData.height,
-            minCount = 3,
+            direction = Direction.Right | Direction.Up,
+            maxPossibleSelectTile = boardData.height * boardData.width,
+            itemType = ItemType.Special_1,
+            blastSizes = new BlastRequirement[]
+            {
+                new BlastRequirement() { min = 3, direction = Direction.Right | Direction.Left },
+                new BlastRequirement() { min = 3, direction = Direction.Up | Direction.Down },
+            }
         };
 
-        BlastCondition verticalCondition = new BlastCondition()
+        BlastRule verticalCondition = new BlastRule()
         {
-            name = "Vertical Blast Condition",
+            name = "Vertical Blast Rule",
             order = 10,
             direction = Direction.Up | Direction.Down,
             maxPossibleSelectTile = boardData.height,
-            minCount = 3
+            itemType = ItemType.None,
+            blastSizes = new BlastRequirement[]
+            {
+                new BlastRequirement() { min = 3, direction = Direction.Up | Direction.Down },
+            }
         };
 
-        BlastCondition horizontalCondition = new BlastCondition()
+        BlastRule horizontalCondition = new BlastRule()
         {
-            name = "Horizontal Blast Condition",
+            name = "Horizontal Blast Rule",
             order = 10,
             direction = Direction.Right | Direction.Left,
             maxPossibleSelectTile = boardData.width,
-            minCount = 3,
+            itemType = ItemType.None,
+            blastSizes = new BlastRequirement[]
+            {
+                new BlastRequirement() { min = 3, direction = Direction.Right | Direction.Left },
+            }
         };
 
+        blastConditions.Add(special1Condition);
         blastConditions.Add(verticalCondition);
         blastConditions.Add(horizontalCondition);
 
         _blastConditions = blastConditions.ToArray();
     }
 
-    public BoardHistory OnBoardUpdate(int cellIndex, Direction direction)
+    public BoardUpdateResult OnBoardUpdate(int cellIndex, Direction direction)
     {
-        BoardHistory boardHistory = new BoardHistory();
+        BoardUpdateResult boardHistory = new BoardUpdateResult();
 
         //Swap Items
-        Cell cell = _cells[cellIndex];
+        BoardCell cell = _cells[cellIndex];
 
         int targetCellIndex = cell.GetDirectionIndex(direction);
         if (targetCellIndex == -1)
         {
             throw new Exception();
         }
-        Cell targetCell = _cells[targetCellIndex];
+        BoardCell targetCell = _cells[targetCellIndex];
 
         SwapCellItem(cellIndex, targetCellIndex);
 
         Item item = _items[cell.itemIndex];
         Item targetItem = _items[targetCell.itemIndex];
 
-        boardHistory.moveFirst = new Move()
+        boardHistory.moveFirst = new SwapMove()
         {
             cellFrom = cell,
             cellTo = targetCell,
@@ -93,13 +107,16 @@ public class Board
         {
             for (int i = 0; i < _blastConditions.Length; i++)
             {
-                BlastCondition blastCondition = _blastConditions[i];
+                BlastRule blastCondition = _blastConditions[i];
 
                 Span<int> selectedTiles = stackalloc int[blastCondition.maxPossibleSelectTile];
                 selectedTiles.Fill(-1);
 
-                int count = CheckBlastTile(cellIndex, selectedTiles, blastCondition.direction);
-                isBlast = count >= blastCondition.minCount;
+                Span<int> countedTiles = stackalloc int[(int)Direction.Count];
+                countedTiles.Fill(0);
+
+                int count = CheckBlastTile(cellIndex, selectedTiles, countedTiles, blastCondition.direction);
+                isBlast = blastCondition.IsBlastSizeValid(countedTiles);
 
                 if (isBlast)
                 {
@@ -121,20 +138,19 @@ public class Board
         return boardHistory;
     }
 
-    private int CheckBlastTile(int beginCellIndex, Span<int> selectedCells, Direction direction)
+    private int CheckBlastTile(int beginCellIndex, Span<int> selectedCells, Span<int> countedTiles, Direction direction)
     {
-        Cell cell = _cells[beginCellIndex];
+        BoardCell cell = _cells[beginCellIndex];
         int count = 0;
 
         Queue<int> cellIndexQueue = new();
         cellIndexQueue.Enqueue(beginCellIndex);
-
         Item targetItem = _items[cell.itemIndex];
 
         while (cellIndexQueue.Count != 0)
         {
             int cellIndex = cellIndexQueue.Dequeue(); 
-            Cell cellQueue = _cells[cellIndex];
+            BoardCell cellQueue = _cells[cellIndex];
 
             if (selectedCells.IndexOf(cellIndex) == -1)
             {
@@ -175,6 +191,7 @@ public class Board
                 {
                     selectedCells[count] = cellIndexes[i];
                     cellIndexQueue.Enqueue(cellIndexes[i]);
+                    countedTiles[((Direction)(1 << i)).GetDirectionIndex()]++;
                     count++;
                 }    
             }
@@ -192,3 +209,4 @@ public class Board
         _cells[cellToIndex].itemIndex = swapItem1;
     }
 }
+

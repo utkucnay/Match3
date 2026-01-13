@@ -1,7 +1,7 @@
 using System;
 using Unity.Mathematics;
 
-public class Level : ISystem
+public class LevelData : ISystem
 {
     public event Action OnLevelStartEvent;
     public event Action OnLevelUpdateEvent;
@@ -14,17 +14,17 @@ public class Level : ISystem
 
     bool isBoardInteractable;
 
-    Logger logger;
+    LogService logger;
 
-    public Level()
+    public LevelData()
     {
-        logger = GlobalSystemManager.Instance.GetSystem<Logger>();
+        logger = GlobalSystemRegistry.Instance.GetSystem<LogService>();
         isBoardInteractable = false;
     }
 
-    ~Level()
+    ~LevelData()
     {
-        logger.Log("Level Instance Destroyed");
+        logger.Log("LevelData Instance Destroyed");
     }
 
     public void Initialize()
@@ -41,7 +41,7 @@ public class Level : ISystem
 
     public void OnLevelUpdate(int2 dragStart, Direction direction)
     {
-        logger.Log($"Level Update From {dragStart}, With Direction {direction}", 1);
+        logger.Log($"LevelData Update From {dragStart}, With Direction {direction}", 1);
 
         if (!isBoardInteractable)
         {
@@ -89,3 +89,4 @@ public class Level : ISystem
         OnLevelEndEvent?.Invoke(isWin);
     }
 }
+

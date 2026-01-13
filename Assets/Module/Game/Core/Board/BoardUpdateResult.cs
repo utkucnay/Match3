@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
 
-public struct Move
+public struct SwapMove
 {
-    public Cell cellFrom;
-    public Cell cellTo;
+    public BoardCell cellFrom;
+    public BoardCell cellTo;
     public Item itemFrom;
     public Item itemTo;
 }
 
-public struct BoardHistory
+public struct BoardUpdateResult
 {
-    public Move moveFirst;
+    public SwapMove moveFirst;
     public int[] blastedTileIndexes;
     public bool isReturn;
     public FixedString128Bytes blastConditionDebugName;
 }
+

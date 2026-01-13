@@ -1,5 +1,5 @@
 
-public struct Cell
+public struct BoardCell
 {
     public int itemIndex;
 
@@ -25,3 +25,4 @@ public struct Cell
         return -1;
     }
 }
+

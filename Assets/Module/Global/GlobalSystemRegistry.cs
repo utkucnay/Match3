@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class GlobalSystemManager : SystemManager
+public class GlobalSystemRegistry : SystemRegistry
 {
-    public static GlobalSystemManager Instance { get; private set; }
+    public static GlobalSystemRegistry Instance { get; private set; }
     
     [SerializeField] private int _logLevel;
 
-    Logger logger;
+    LogService logger;
 
     private void Awake()
     {
@@ -15,7 +15,7 @@ public class GlobalSystemManager : SystemManager
             DontDestroyOnLoad(gameObject);
             Instance = this;
 
-            logger = new Logger(_logLevel);
+            logger = new LogService(_logLevel);
             RegisterSystem(logger);
 
             return;
@@ -24,3 +24,4 @@ public class GlobalSystemManager : SystemManager
         DestroyImmediate(this);
     }
 }
+
