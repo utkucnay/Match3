@@ -31,7 +31,18 @@ public class Level : ISystem
 
     public void Initialize()
     {
-        
+        ILevelDataProvider levelDataProvider = new TextFileLevelDataProvider();
+        LevelData levelData = levelDataProvider.LoadLevel(1);
+
+        BoardConfig boardConfig = new BoardConfig
+        {
+            width = levelData.Width,
+            height = levelData.Height
+        };
+
+        board = new Board(boardConfig);
+        board.Initialize(levelData, ref random);
+        moveCount = levelData.Moves;
     }
 
     public void OnLevelStart()
@@ -91,4 +102,3 @@ public class Level : ISystem
         OnLevelEndEvent?.Invoke(isWin);
     }
 }
-
