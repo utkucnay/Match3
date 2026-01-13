@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
+using Random = Unity.Mathematics.Random;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -33,7 +34,8 @@ public class BlastRuleTests
         SetPrivateField(board, "_cells", cells);
         SetPrivateField(board, "_items", items);
 
-        var history = board.OnBoardUpdate(IndexOf(2, 2, data.width), Direction.Up);
+        var random = new Random(1);
+        var history = board.OnBoardUpdate(IndexOf(2, 2, data.width), Direction.Up, ref random);
 
         Assert.IsFalse(history.isReturn, "Expected blast to mark move as non-return.");
         Assert.IsNotNull(history.blastedTileIndexes, "Expected blastedTileIndexes to be populated.");
@@ -64,7 +66,8 @@ public class BlastRuleTests
         SetPrivateField(board, "_cells", cells);
         SetPrivateField(board, "_items", items);
 
-        var history = board.OnBoardUpdate(IndexOf(2, 2, data.width), Direction.Up);
+        var random = new Random(1);
+        var history = board.OnBoardUpdate(IndexOf(2, 2, data.width), Direction.Up, ref random);
 
         Assert.IsFalse(history.isReturn, "Expected blast to mark move as non-return.");
         Assert.AreEqual("Vertical Blast Rule", history.blastConditionDebugName.ToString());
@@ -94,7 +97,8 @@ public class BlastRuleTests
         SetPrivateField(board, "_cells", cells);
         SetPrivateField(board, "_items", items);
 
-        var history = board.OnBoardUpdate(IndexOf(2, 2, data.width), Direction.Right);
+        var random = new Random(1);
+        var history = board.OnBoardUpdate(IndexOf(2, 2, data.width), Direction.Right, ref random);
 
         Assert.IsFalse(history.isReturn, "Expected blast to mark move as non-return.");
         Assert.AreEqual("Horizontal Blast Rule", history.blastConditionDebugName.ToString());
@@ -112,7 +116,8 @@ public class BlastRuleTests
         SetPrivateField(board, "_cells", cells);
         SetPrivateField(board, "_items", items);
 
-        var history = board.OnBoardUpdate(IndexOf(1, 1, data.width), Direction.Up);
+        var random = new Random(1);
+        var history = board.OnBoardUpdate(IndexOf(1, 1, data.width), Direction.Up, ref random);
 
         Assert.IsTrue(history.isReturn, "Expected move to be marked as return when no blast occurs.");
         Assert.IsNull(history.blastedTileIndexes, "Expected no blasted tiles when no blast occurs.");
@@ -135,7 +140,8 @@ public class BlastRuleTests
         SetPrivateField(board, "_cells", cells);
         SetPrivateField(board, "_items", items);
 
-        var history = board.OnBoardUpdate(0, Direction.Right);
+        var random = new Random(1);
+        var history = board.OnBoardUpdate(0, Direction.Right, ref random);
 
         var updatedCells = GetPrivateField<BoardCell[]>(board, "_cells");
 

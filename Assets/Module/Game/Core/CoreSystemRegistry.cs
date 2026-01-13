@@ -1,10 +1,10 @@
 public class CoreSystemRegistry : SystemRegistry
 {
-    LevelData _level;
+    Level _level;
 
     private void Awake()
     {
-        _level = new LevelData();
+        _level = new Level();
 
         RegisterSystem(_level);
     }

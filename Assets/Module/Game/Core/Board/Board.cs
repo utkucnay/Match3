@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Random = Unity.Mathematics.Random;
 
 public struct BoardConfig
 {
@@ -73,7 +74,7 @@ public class Board
         _blastConditions = blastConditions.ToArray();
     }
 
-    public BoardUpdateResult OnBoardUpdate(int cellIndex, Direction direction)
+    public BoardUpdateResult OnBoardUpdate(int cellIndex, Direction direction, ref Random random)
     {
         BoardUpdateResult boardHistory = new BoardUpdateResult();
 
@@ -100,7 +101,6 @@ public class Board
             itemTo = targetItem,
         };
 
-        //Check For Blast Tile
         bool isBlast = false;
 
         if (item.itemType.HasFlag(ItemType.Blast))
@@ -125,6 +125,16 @@ public class Board
                     boardHistory.blastConditionDebugName = blastCondition.name;
                     break;
                 }
+            }
+        }
+
+        if (isBlast)
+        {
+            for (int i = 0; i < boardHistory.blastedTileIndexes.Length; i++)
+            {
+                int blastedIndex = boardHistory.blastedTileIndexes[i];
+                int itemIndex = _cells[blastedIndex].itemIndex;
+                _items[itemIndex].itemType = ItemTypeExtensions.GetRandomBlastType(ref random);
             }
         }
 

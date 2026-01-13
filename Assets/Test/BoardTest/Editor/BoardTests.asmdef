@@ -5,7 +5,8 @@
         "UnityEditor.TestRunner",
         "CoreSystem",
         "Util",
-        "Unity.Collections"
+        "Unity.Collections",
+        "Unity.Mathematics"
     ],
     "includePlatforms": [
         "Editor"

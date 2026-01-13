@@ -1,28 +1,30 @@
 using System;
 using Unity.Mathematics;
+using Random = Unity.Mathematics.Random;
 
-public class LevelData : ISystem
+public class Level : ISystem
 {
     public event Action OnLevelStartEvent;
     public event Action OnLevelUpdateEvent;
     public event Action OnLevelLateUpdateEvent;
     public event Action<bool> OnLevelEndEvent;
 
-    Board board;
-    //Goal goal;
-    int moveCount;
+    private Board board;
+    //private Goal goal;
+    private int moveCount;
+    private bool isBoardInteractable;
 
-    bool isBoardInteractable;
+    private LogService logger;
+    private Random random;
 
-    LogService logger;
-
-    public LevelData()
+    public Level()
     {
         logger = GlobalSystemRegistry.Instance.GetSystem<LogService>();
         isBoardInteractable = false;
+        random = new Random(1);
     }
 
-    ~LevelData()
+    ~Level()
     {
         logger.Log("LevelData Instance Destroyed");
     }
@@ -48,7 +50,7 @@ public class LevelData : ISystem
             return;
         }
 
-        //var boardHistory = board.OnBoardUpdate(dragStart, direction);
+        //var boardHistory = board.OnBoardUpdate(dragStart, direction, ref random);
         //goal.Update(boardHistory);
 
         moveCount--;
