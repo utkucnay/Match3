@@ -1,0 +1,16 @@
+// Level format:
+// First line: <width> <height> <moves>
+// Next <height> lines: grid rows (top to bottom)
+// Tokens can be space-separated or a compact string of length <width>.
+// Symbols:
+//   . = empty, X = excluded cell (optional, not used in this sample)
+//   R/B/G/Y = blast colors (Red/Blue/Green/Yellow)
+//   O = obstacle (Obstacle_1)
+7 7 20
+R B G Y R B G
+B G Y R B G Y
+G Y R B G Y R
+Y R B G Y R B
+R B G Y R B G
+B G Y R B G Y
+G Y R B G Y R
