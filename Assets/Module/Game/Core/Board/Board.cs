@@ -12,6 +12,8 @@ public struct BoardConfig
 
 public class Board 
 {
+    private const int ExcludedItemIndex = -1;
+
     private BoardCell[] _cells;
     private Item[] _items;
     private BlastRule[] _blastConditions;
@@ -72,6 +74,82 @@ public class Board
         blastConditions.Add(horizontalCondition);
 
         _blastConditions = blastConditions.ToArray();
+    }
+
+    public void Initialize(LevelData data, ref Random random)
+    {
+        if (data == null)
+        {
+            throw new ArgumentNullException(nameof(data));
+        }
+
+        int width = data.Width;
+        int height = data.Height;
+        int size = width * height;
+
+        if (_cells == null || _cells.Length != size)
+        {
+            _cells = new BoardCell[size];
+        }
+
+        if (_items == null || _items.Length < size)
+        {
+            _items = new Item[size];
+        }
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                int index = (y * width) + x;
+                bool isExcluded = data.ExcludedCells[index];
+
+                BoardCell cell = new BoardCell();
+
+                if (isExcluded)
+                {
+                    cell.itemIndex = ExcludedItemIndex;
+                    cell.upCellIndex = -1;
+                    cell.downCellIndex = -1;
+                    cell.rightCellIndex = -1;
+                    cell.leftCellIndex = -1;
+                    _cells[index] = cell;
+                    continue;
+                }
+
+                cell.itemIndex = index;
+
+                ItemType itemType = data.Items[index];
+                if (itemType == ItemType.None)
+                {
+                    itemType = ItemTypeExtensions.GetRandomBlastType(ref random);
+                }
+
+                _items[index] = new Item
+                {
+                    itemType = itemType,
+                    health = 0
+                };
+
+                cell.upCellIndex = GetAdjacentIndex(x, y + 1, width, height, data.ExcludedCells);
+                cell.downCellIndex = GetAdjacentIndex(x, y - 1, width, height, data.ExcludedCells);
+                cell.rightCellIndex = GetAdjacentIndex(x + 1, y, width, height, data.ExcludedCells);
+                cell.leftCellIndex = GetAdjacentIndex(x - 1, y, width, height, data.ExcludedCells);
+
+                _cells[index] = cell;
+            }
+        }
+    }
+
+    private static int GetAdjacentIndex(int x, int y, int width, int height, bool[] excludedCells)
+    {
+        if (x < 0 || x >= width || y < 0 || y >= height)
+        {
+            return -1;
+        }
+
+        int index = (y * width) + x;
+        return excludedCells[index] ? -1 : index;
     }
 
     public BoardUpdateResult OnBoardUpdate(int cellIndex, Direction direction, ref Random random)
@@ -219,4 +297,3 @@ public class Board
         _cells[cellToIndex].itemIndex = swapItem1;
     }
 }
-
