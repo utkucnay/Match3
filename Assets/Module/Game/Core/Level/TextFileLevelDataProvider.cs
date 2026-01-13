@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class TextFileLevelDataProvider : ILevelDataProvider
@@ -16,6 +17,12 @@ public class TextFileLevelDataProvider : ILevelDataProvider
             ["Y"] = ItemType.Blast_Yellow,
             ["O"] = ItemType.Obstacle_1
         };
+
+    /// <summary>
+    /// Indicates whether compact format parsing is supported.
+    /// Compact format is only supported when all tokens in ItemMappings are single-character.
+    /// </summary>
+    private static readonly bool SupportsCompactFormat = ItemMappings.Keys.All(token => token.Length == 1);
 
     public LevelData LoadLevel(int id)
     {
@@ -142,10 +149,17 @@ public class TextFileLevelDataProvider : ILevelDataProvider
         return lines;
     }
 
+    /// <summary>
+    /// Tokenizes a row, supporting both space-separated and compact formats.
+    /// Compact format (e.g., "RRGBY") is only supported when all tokens in ItemMappings are single-character.
+    /// If any token is multi-character, compact format will be rejected and only space-separated format is allowed.
+    /// </summary>
     private static string[] TokenizeRow(string line, int width)
     {
         string[] tokens = Tokenize(line);
-        if (tokens.Length == 1 && tokens[0].Length == width)
+        // Compact format: single token with length equal to width (e.g., "RRGBY" for width=5)
+        // Only use compact format if all ItemMappings tokens are single-character
+        if (tokens.Length == 1 && tokens[0].Length == width && SupportsCompactFormat)
         {
             string compact = tokens[0];
             string[] expanded = new string[width];
