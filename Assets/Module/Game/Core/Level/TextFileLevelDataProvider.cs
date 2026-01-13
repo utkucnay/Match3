@@ -60,6 +60,10 @@ public class TextFileLevelDataProvider : ILevelDataProvider
         int width = int.Parse(headerTokens[0]);
         int height = int.Parse(headerTokens[1]);
         int moves = int.Parse(headerTokens[2]);
+        if (moves < 0)
+        {
+            throw new InvalidDataException($"Level file '{name}' has an invalid moves value: {moves}. Moves must be non-negative.");
+        }
 
         if (width <= 0 || height <= 0)
         {
