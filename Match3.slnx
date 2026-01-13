@@ -1,7 +1,0 @@
-﻿<Solution>
-  <Project Path="Util.csproj" />
-  <Project Path="Global.csproj" />
-  <Project Path="CoreSystem.csproj" />
-  <Project Path="CustomSystem.csproj" />
-  <Project Path="BoardTests.csproj" />
-</Solution>
