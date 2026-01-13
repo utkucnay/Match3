@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class TextFileLevelDataProvider : ILevelDataProvider
@@ -17,8 +18,11 @@ public class TextFileLevelDataProvider : ILevelDataProvider
             ["O"] = ItemType.Obstacle_1
         };
 
-    // Check if all tokens in ItemMappings are single-character to support compact format
-    private static readonly bool SupportsCompactFormat = AllTokensAreSingleCharacter();
+    /// <summary>
+    /// Indicates whether compact format parsing is supported.
+    /// Compact format is only supported when all tokens in ItemMappings are single-character.
+    /// </summary>
+    private static readonly bool SupportsCompactFormat = ItemMappings.Keys.All(token => token.Length == 1);
 
     public LevelData LoadLevel(int id)
     {
@@ -173,22 +177,5 @@ public class TextFileLevelDataProvider : ILevelDataProvider
     private static string[] Tokenize(string line)
     {
         return line.Split(new[] { ' ', '\t', ',' }, StringSplitOptions.RemoveEmptyEntries);
-    }
-
-    /// <summary>
-    /// Checks if all tokens in ItemMappings are single-character.
-    /// This determines whether compact format parsing can be safely used.
-    /// </summary>
-    private static bool AllTokensAreSingleCharacter()
-    {
-        foreach (string token in ItemMappings.Keys)
-        {
-            if (token.Length != 1)
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
