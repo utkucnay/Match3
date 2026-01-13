@@ -17,6 +17,9 @@ public class TextFileLevelDataProvider : ILevelDataProvider
             ["O"] = ItemType.Obstacle_1
         };
 
+    // Check if all tokens in ItemMappings are single-character to support compact format
+    private static readonly bool SupportsCompactFormat = AllTokensAreSingleCharacter();
+
     public LevelData LoadLevel(int id)
     {
         return LoadLevel($"level_{id:00}");
@@ -142,10 +145,17 @@ public class TextFileLevelDataProvider : ILevelDataProvider
         return lines;
     }
 
+    /// <summary>
+    /// Tokenizes a row, supporting both space-separated and compact formats.
+    /// Compact format (e.g., "RRGBY") is only supported when all tokens in ItemMappings are single-character.
+    /// If any token is multi-character, compact format will be rejected and only space-separated format is allowed.
+    /// </summary>
     private static string[] TokenizeRow(string line, int width)
     {
         string[] tokens = Tokenize(line);
-        if (tokens.Length == 1 && tokens[0].Length == width)
+        // Compact format: single token with length equal to width (e.g., "RRGBY" for width=5)
+        // Only use compact format if all ItemMappings tokens are single-character
+        if (tokens.Length == 1 && tokens[0].Length == width && SupportsCompactFormat)
         {
             string compact = tokens[0];
             string[] expanded = new string[width];
@@ -163,5 +173,22 @@ public class TextFileLevelDataProvider : ILevelDataProvider
     private static string[] Tokenize(string line)
     {
         return line.Split(new[] { ' ', '\t', ',' }, StringSplitOptions.RemoveEmptyEntries);
+    }
+
+    /// <summary>
+    /// Checks if all tokens in ItemMappings are single-character.
+    /// This determines whether compact format parsing can be safely used.
+    /// </summary>
+    private static bool AllTokensAreSingleCharacter()
+    {
+        foreach (string token in ItemMappings.Keys)
+        {
+            if (token.Length != 1)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
