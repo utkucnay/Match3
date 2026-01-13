@@ -10,6 +10,7 @@ public class Level : ISystem
     public event Action<bool> OnLevelEndEvent;
 
     private Board board;
+    private readonly ILevelDataProvider levelDataProvider;
     //private Goal goal;
     private int moveCount;
     private bool isBoardInteractable;
@@ -17,9 +18,12 @@ public class Level : ISystem
     private LogService logger;
     private Random random;
 
-    public Level()
+    public Board Board => board;
+
+    public Level(ILevelDataProvider levelDataProvider = null)
     {
         logger = GlobalSystemRegistry.Instance.GetSystem<LogService>();
+        this.levelDataProvider = levelDataProvider ?? new TextFileLevelDataProvider();
         isBoardInteractable = false;
         random = new Random(1);
     }
@@ -31,8 +35,12 @@ public class Level : ISystem
 
     public void Initialize()
     {
-        ILevelDataProvider levelDataProvider = new TextFileLevelDataProvider();
-        LevelData levelData = levelDataProvider.LoadLevel(1);
+        LoadLevel("level_01");
+    }
+
+    public void LoadLevel(string levelName)
+    {
+        LevelData levelData = levelDataProvider.LoadLevel(levelName);
 
         BoardConfig boardConfig = new BoardConfig
         {
