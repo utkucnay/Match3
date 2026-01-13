@@ -61,6 +61,10 @@ public class TextFileLevelDataProvider : ILevelDataProvider
         int height = int.Parse(headerTokens[1]);
         int moves = int.Parse(headerTokens[2]);
 
+        if (width <= 0 || height <= 0)
+        {
+            throw new InvalidDataException($"Level file '{name}' must specify positive width and height.");
+        }
         if (contentLines.Count - 1 < height)
         {
             throw new InvalidDataException($"Level file '{name}' does not contain {height} rows.");
