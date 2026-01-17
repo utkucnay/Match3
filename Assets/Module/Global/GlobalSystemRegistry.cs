@@ -1,4 +1,7 @@
+using System.Collections;
+using Unity.VectorGraphics;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class GlobalSystemRegistry : SystemRegistry
 {
@@ -6,7 +9,9 @@ public class GlobalSystemRegistry : SystemRegistry
     
     [SerializeField] private int _logLevel;
 
-    private LogService logger;
+    private LogService _logger;
+    private SceneManager _sceneManager;
+    private AddressableLoader _addressableLoader;
 
     protected override void Awake()
     {
@@ -17,13 +22,25 @@ public class GlobalSystemRegistry : SystemRegistry
             DontDestroyOnLoad(gameObject);
             Instance = this;
 
-            logger = new LogService(_logLevel);
-            RegisterSystem(logger);
+            _logger = new LogService(this, _logLevel);
+            RegisterSystem(_logger);
+
+            _sceneManager = new SceneManager(this);
+            RegisterSystem(_sceneManager);
+
+            _addressableLoader = new AddressableLoader(this);   
+            RegisterSystem(_addressableLoader);
 
             return;
         }
 
         DestroyImmediate(this);
+    }
+
+    protected IEnumerator Start()
+    {
+        yield return _addressableLoader.Initialize();
+        yield return _sceneManager.LoadSceneCoroutine();
     }
 }
 

@@ -20,6 +20,10 @@ public class Board
 
     private readonly BoardConfig boardData;
 
+    public BoardCell[] Cells => _cells;
+    public Item[] Items => _items;
+    public BoardConfig BoardData => boardData;
+
     public  Board(BoardConfig boardData)
     {
         this.boardData = boardData;

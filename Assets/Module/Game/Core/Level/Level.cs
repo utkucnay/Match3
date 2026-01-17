@@ -2,7 +2,7 @@ using System;
 using Unity.Mathematics;
 using Random = Unity.Mathematics.Random;
 
-public class Level : ISystem
+public class Level : GenericSubsystem, IInitializable
 {
     public event Action OnLevelStartEvent;
     public event Action OnLevelUpdateEvent;
@@ -10,32 +10,36 @@ public class Level : ISystem
     public event Action<bool> OnLevelEndEvent;
 
     private Board board;
-    private readonly ILevelDataProvider levelDataProvider;
     //private Goal goal;
     private int moveCount;
     private bool isBoardInteractable;
+    private BoardView _boardView;
 
     private LogService logger;
     private Random random;
 
     public Board Board => board;
 
-    public Level(ILevelDataProvider levelDataProvider = null)
+    private readonly ILevelDataProvider levelDataProvider;
+
+    public Level(SystemRegistry systemRegistry, BoardView boardView, ILevelDataProvider levelDataProvider = null) : base(systemRegistry)
     {
-        logger = GlobalSystemRegistry.Instance.GetSystem<LogService>();
+        logger = systemRegistry.GetSystem<LogService>();
         this.levelDataProvider = levelDataProvider ?? new TextFileLevelDataProvider();
         isBoardInteractable = false;
-        random = new Random(1);
+        random = new Random(255);
+        _boardView = boardView;
     }
 
     ~Level()
     {
-        logger.Log("LevelData Instance Destroyed");
+        logger.Log($"{GetType().Name} Instance Destroyed");
     }
 
     public void Initialize()
     {
         LoadLevel("level_01");
+        _boardView.Initialize(_systemRegistry, board);
     }
 
     public void LoadLevel(string levelName)
@@ -69,11 +73,12 @@ public class Level : ISystem
             return;
         }
 
-        //var boardHistory = board.OnBoardUpdate(dragStart, direction, ref random);
+        var boardHistory = board.OnBoardUpdate(0, direction, ref random);
         //goal.Update(boardHistory);
 
         moveCount--;
 
+        _eventBus.Publish(new BoardUpdateEvent() { boardUpdateResult = boardHistory });
         OnLevelUpdateEvent?.Invoke();
         OnLevelLateUpdate();
     }

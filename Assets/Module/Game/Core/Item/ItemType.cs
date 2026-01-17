@@ -10,7 +10,7 @@ public enum ItemType : int
     Blast_Red = 17,
     Blast_Blue = 18,
     Blast_Green = 20,
-    Blast_Yellow = 21,
+    Blast_Purple = 21,
     Special = 32,
     Special_1 = 33, 
     Special_2 = 34,
@@ -21,6 +21,31 @@ public enum ItemType : int
 
 public static class ItemTypeExtensions
 {
+    public static int ItemTypeToIndex(this ItemType itemType)
+    {
+        switch (itemType)
+        {
+            case ItemType.Blast_Red:
+                return 0;
+            case ItemType.Blast_Blue:
+                return 1;
+            case ItemType.Blast_Green:
+                return 2;
+            case ItemType.Blast_Purple:
+                return 3;
+            case ItemType.Obstacle_1:
+                return 4;
+            case ItemType.Special_1:
+                return 5;
+            case ItemType.Special_2:
+                return 6;
+            case ItemType.Special_3:
+                return 7;
+            default:
+                return -1;            
+        }
+    }
+
     public static ItemType GetRandomBlastType(ref Random random)
     {
         Span<int> blastTypes = stackalloc int[]
@@ -28,7 +53,7 @@ public static class ItemTypeExtensions
             (int)ItemType.Blast_Red,
             (int)ItemType.Blast_Blue,
             (int)ItemType.Blast_Green,
-            (int)ItemType.Blast_Yellow
+            (int)ItemType.Blast_Purple
         };
 
         int randomIndex = random.NextInt(0, blastTypes.Length);

@@ -3,6 +3,8 @@ public struct BoardCell
 {
     public int itemIndex;
 
+    public int cellViewIndex;
+
     public int upCellIndex;
     public int downCellIndex;
     public int rightCellIndex;

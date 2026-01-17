@@ -14,7 +14,7 @@ public class TextFileLevelDataProvider : ILevelDataProvider
             ["R"] = ItemType.Blast_Red,
             ["B"] = ItemType.Blast_Blue,
             ["G"] = ItemType.Blast_Green,
-            ["Y"] = ItemType.Blast_Yellow,
+            ["Y"] = ItemType.Blast_Purple,
             ["O"] = ItemType.Obstacle_1
         };
 
@@ -64,10 +64,6 @@ public class TextFileLevelDataProvider : ILevelDataProvider
             throw new InvalidDataException($"Level file '{name}' must start with: <width> <height> <moves>.");
         }
 
-        int width = int.Parse(headerTokens[0]);
-        int height = int.Parse(headerTokens[1]);
-        int moves = int.Parse(headerTokens[2]);
-        if (moves < 0)
         if (!int.TryParse(headerTokens[0], out int width))
         {
             throw new InvalidDataException($"Level file '{name}' has invalid width '{headerTokens[0]}'. Width must be an integer.");

@@ -16,12 +16,42 @@ MonoBehaviour:
   m_GUID: 503e709a829aa8548a904de8b7a7b4e2
   m_SerializeEntries:
   - m_GUID: 07ee2d16d17054f4fb803e5cd2a47cb8
-    m_Address: Assets/Scenes/2-MainScene.unity
+    m_Address: 2-MainScene
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 238894cd8128b1143bf358759b202932
-    m_Address: Assets/Scenes/3-GameScene.unity
+    m_Address: 3-GameScene
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4a1bc9247a5154a47af31d1cd204b7c0
+    m_Address: Blast_Red
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4b6196306849e144186cf380c5785342
+    m_Address: ItemView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a08384db8cae684419603912d298efbe
+    m_Address: Blast_Purple
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a4d710dd1f0558e40938a7046ab756b8
+    m_Address: CellView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bc093c349820ac849a9a995e7acb2f31
+    m_Address: Blast_Green
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dea4aebc8b974f84dab45a46bfc2e314
+    m_Address: Blast_Blue
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

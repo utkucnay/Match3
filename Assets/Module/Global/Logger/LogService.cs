@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class LogService : ISystem
+public class LogService : GenericSubsystem
 {
     private readonly int logLevel;
 
-    public LogService(int logLevel)
+    public LogService(SystemRegistry systemRegistry, int logLevel) : base(systemRegistry)
     {
         this.logLevel = logLevel;
     }
